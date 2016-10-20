@@ -3,7 +3,7 @@
 
 You want to compile your Less files when you save them, but you don't want to instal nodejs just for this... So, you're stuck... Guess what? You're not because of this repo ;)
 
-This plugin compiles automatically your less files as soon as you save them, using a lesscpy.
+This plugin compiles automatically your less files as soon as you save them, using a [lesscpy](https://github.com/lesscpy/lesscpy).
 
 ## Installation
 
@@ -17,7 +17,7 @@ Go to your package folder (of sublime text), create a new file, and paste [this 
 
 This one is a bit harder to install. You need to copy [this folder](https://github.com/dabeaz/ply/tree/master/ply) into you package folder. You an use [this website](http://kinolien.github.io/gitzip/) to do so. Extract it into `Packages` as a folder named `ply`.
 
-### Third dependence: `lesscpy`
+### `lesscpy`
 
 Same as `ply`, you need to download [this folder](https://github.com/lesscpy/lesscpy/tree/master/lesscpy) and extract it into you package folder.
 

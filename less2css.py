@@ -33,30 +33,9 @@ def dirnameUntil(path, dirname):
 	rest.reverse()
 	return os.path.sep.join(path), os.path.sep.join(rest)
 
-class LessCompiler(Thread):
-
-	def __init__(self, less, done, args=[], kwargs={}):
-		self.less = less
-		self.done = done
-		self.done_args = args
-		self.done_kwargs = kwargs
-
-		super(LessCompiler, self).__init__()
-
-	def run(self):
-		try:
-			css = lesscpy.compile(io.StringIO(self.less))
-		except lesscpy.exceptions.CompilationError as e:
-			em(e.msg)
-		else:
-			# return print(self.done_args, self.done_kwargs)
-			self.done(css, *self.done_args, **self.done_kwargs)
-			return None
-
 	
 def compileAndWrite(v=False):
 
-	print('run')
 
 	STYLES = 'styles'
 	CSS = 'css'
@@ -64,7 +43,7 @@ def compileAndWrite(v=False):
 
 	v = v or sublime.active_window().active_view()
 	lessfile = v.file_name()
-	lessfile = 'C:\\Users\\math\\AppData\\Roaming\\Sublime Text 3\\Packages\\less2css\\styles\\less\\sample.less'
+	sm("less2css: Compiling {}".format(lessfile))
 
 	if not lessfile:
 		return em('You must save this view to compile it!')
@@ -72,8 +51,6 @@ def compileAndWrite(v=False):
 	ext = os.path.splitext(lessfile)[1]
 	if ext != '.less':
 		return em("Can only compile '.less' files, not '{}'!".format(ext))
-
-	
 
 	style_dir, cssfile = dirnameUntil(lessfile, STYLES)
 
@@ -94,8 +71,17 @@ def compileAndWrite(v=False):
 	except lesscpy.exceptions.CompilationError as e:
 		em(e.msg)
 	else:
+
+		dirname = os.path.dirname(cssfile)
+
+		if not os.path.exists( dirname ):
+			os.makedirs(dirname)
+
 		with open(cssfile, 'w') as fp:
 			fp.write(less)
+
+		sm("less2css: Finished compiling {}".format(cssfile))
+
 
 
 class LessToCssListenerCommand(sublime_plugin.EventListener):
