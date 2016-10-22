@@ -1,0 +1,42 @@
+[
+	{
+		"caption": "Preferences",
+		"mnemonic": "n",
+		"id": "preferences",
+		"children":
+		[
+			{
+				"caption": "Package Settings",
+				"mnemonic": "P",
+				"id": "package-settings",
+				"children":
+				[
+					{
+						"caption": "less2css",
+						"mnemonic": "l",
+						"id": "less2css",
+						"children": [
+							{
+								"caption": "Settings – Default",
+								"mnemonic": "D",
+								"command": "open_file",
+								"args": {
+									"file": "${packages}/less2css/less2css.sublime-settings"
+								}
+							},
+							{
+								"caption": "Settings – User",
+								"mnemonic": "U",
+								"command": "open_file",
+								"args": {
+									"file": "${packages}/User/less2css.sublime-settings",
+									"contents": "{\n\t\n}"
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+]

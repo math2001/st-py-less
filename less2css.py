@@ -6,9 +6,7 @@ import io
 import six
 import ply
 
-from threading import Thread
-
-
+import threading
 
 
 
@@ -33,15 +31,18 @@ def dirnameUntil(path, dirname):
 	rest.reverse()
 	return os.path.sep.join(path), os.path.sep.join(rest)
 
-	
-def compileAndWrite(v=False):
+def view_from_sublime():
+	return sublime.active_window().active_view()	
 
 
-	STYLES = 'styles'
-	CSS = 'css'
-	LESS = 'less'
+def compileAndWrite(v, settings, content=None):
 
-	v = v or sublime.active_window().active_view()
+
+	STYLES = settings.get('styles', 'styles')
+	CSS = settings.get('css', 'css')
+	LESS = settings.get('less', 'less')
+
+	v = v or view_from_sublime()
 	lessfile = v.file_name()
 	sm("less2css: Compiling {}".format(lessfile))
 
@@ -57,13 +58,13 @@ def compileAndWrite(v=False):
 	if style_dir is False:
 		return em("All your style must be put in a {} folders. See README.md for more infos".format(STYLES))
 
-	cssfile = 'css' + os.path.sep + os.path.sep.join(cssfile.split(os.path.sep)[1:])
+	cssfile = CSS + os.path.sep + os.path.sep.join(cssfile.split(os.path.sep)[1:])
 	cssfile = os.path.dirname(cssfile)
 	cssfile = os.path.join(style_dir, cssfile, os.path.splitext(os.path.basename(lessfile))[0] + '.css')
 
-
-	with open(lessfile, 'r') as fp:
-		content = fp.read()
+	if content is None:
+		with open(lessfile, 'r') as fp:
+			content = fp.read()
 
 
 	try:
@@ -86,9 +87,22 @@ def compileAndWrite(v=False):
 
 class LessToCssListenerCommand(sublime_plugin.EventListener):
 
-	def on_post_save_async(self, v):
+	def on_pre_save_async(self, v):
 		if os.path.splitext(v.file_name())[1] == '.less':
-			compileAndWrite(v)
+			settings = sublime.load_settings('less2css.sublime-settings')
+			if not settings.get('compile_on_save', True):
+				print('no compiling', settings.get('compile_on_save', True))
+				return
+
+			content = v.substr(sublime.Region(0, v.size()))
+			compileAndWrite(v, settings)
 
 
 
+class LessToCssCommand(sublime_plugin.ApplicationCommand):
+
+	def run(self):
+		sublime.set_timeout_async(compileAndWrite, 0)
+
+	def is_visible(self):
+		return os.path.splitext(view_from_sublime().file_name())[1] == '.less'

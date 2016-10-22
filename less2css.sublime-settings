@@ -1,0 +1,6 @@
+{
+	"styles": "styles",
+	"css": "css",
+	"less": "less",
+	"compile_on_save": true
+}
