@@ -66,3 +66,6 @@ At the end, your `packages` folder should look like this:
 			...
 		six.py
 
+Hope you enjoy it!
+
+If you have any idea how to improve it, feel free to PR this repo, or if just tell it to me, I might manage to do it myself!
